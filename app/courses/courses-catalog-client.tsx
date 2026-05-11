@@ -21,6 +21,8 @@ export default function CoursesCatalogClient({
   levels: string[];
 }) {
   const [level, setLevel] = useState<string>("all");
+  const [query, setQuery] = useState<string>("");
+  const [category, setCategory] = useState<string>("all");
 
   return (
     <div className="stack-md">
@@ -35,13 +37,20 @@ export default function CoursesCatalogClient({
               type="text"
               className="input"
               placeholder="e.g. Next.js"
+              onChange={(e) => setQuery(e.target.value)}
+              value={query}
             />
           </div>
           <div className="field">
             <label htmlFor="course-category" className="field-label">
               Category
             </label>
-            <select id="course-category" className="input">
+            <select
+              id="course-category"
+              className="select"
+              onChange={(e) => setCategory(e.target.value)}
+              value={category}
+            >
               <option value="all">All</option>
               {categories.map((c) => (
                 <option key={c} value={c}>
@@ -51,15 +60,15 @@ export default function CoursesCatalogClient({
             </select>
           </div>
           <div className="field">
-            <label
-              htmlFor="course-level"
-              className="field-label"
+            <label htmlFor="course-level" className="field-label">
+              Level
+            </label>
+            <select
+              id="course-level"
+              className="select"
               onChange={(e) => setLevel(e.target.value)}
               value={level}
             >
-              Level
-            </label>
-            <select id="course-level" className="select">
               <option value="all">All</option>
               {levels.map((l) => (
                 <option key={l} value={l}>
