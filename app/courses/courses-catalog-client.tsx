@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { instructors, type Course } from "@/lib/data";
+import { useState } from "react";
 
 function instructorNameForCourse(course: Course): string {
   return (
@@ -19,8 +20,56 @@ export default function CoursesCatalogClient({
   categories: string[];
   levels: string[];
 }) {
+  const [level, setLevel] = useState<string>("all");
+
   return (
     <div className="stack-md">
+      <div className="panel">
+        <div className="grid-filters">
+          <div className="field">
+            <label htmlFor="course-search" className="field-label">
+              Search by title
+            </label>
+            <input
+              id="course-search"
+              type="text"
+              className="input"
+              placeholder="e.g. Next.js"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="course-category" className="field-label">
+              Category
+            </label>
+            <select id="course-category" className="input">
+              <option value="all">All</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label
+              htmlFor="course-level"
+              className="field-label"
+              onChange={(e) => setLevel(e.target.value)}
+              value={level}
+            >
+              Level
+            </label>
+            <select id="course-level" className="select">
+              <option value="all">All</option>
+              {levels.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
       <div className="grid-cards">
         {courses.map((course) => (
           <Link
