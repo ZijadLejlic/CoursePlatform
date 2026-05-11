@@ -1,6 +1,16 @@
-import Link from "next/link";
+import CoursesCatalogClient from "./courses-catalog-client";
+import {
+  getAllCourses,
+  getCourseCategories,
+  getCourseLevels,
+} from "@/lib/data";
 
 export default function Courses() {
+  const courses = getAllCourses();
+
+  const categories = getCourseCategories();
+  const levels = getCourseLevels();
+
   return (
     <section className="pad-section">
       <div className="container">
@@ -14,33 +24,11 @@ export default function Courses() {
             </p>
           </div>
 
-          <div className="stack-md">
-            <div className="grid-cards">
-              <Link href="#" className="card-link">
-                <div className="badge-row">
-                  <span className="badge badge--brand">Web Development</span>
-                  <span className="badge">Beginner</span>
-                </div>
-
-                <h3 className="card-link-title">HTML, CSS, course</h3>
-                <p className="card-link-body">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab ex
-                  voluptatum maxime et inventore natus dicta.
-                </p>
-
-                <dl className="card-meta">
-                  <div>
-                    <dt>Lessons</dt>
-                    <dd>12</dd>
-                  </div>
-                  <div>
-                    <dt>Duration</dt>
-                    <dd>23h</dd>
-                  </div>
-                </dl>
-              </Link>
-            </div>
-          </div>
+          <CoursesCatalogClient
+            courses={courses}
+            categories={categories}
+            levels={levels}
+          ></CoursesCatalogClient>
         </div>
       </div>
     </section>
