@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { instructors, type Course } from "@/lib/data";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 function instructorNameForCourse(course: Course): string {
   return (
@@ -20,9 +20,21 @@ export default function CoursesCatalogClient({
   categories: string[];
   levels: string[];
 }) {
-  const [level, setLevel] = useState<string>("all");
   const [query, setQuery] = useState<string>("");
   const [category, setCategory] = useState<string>("all");
+  const [level, setLevel] = useState<string>("all");
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return courses.filter((course) => {
+      const matchesQuery = q === "" || course.title.toLowerCase().includes(q);
+      const matchesCategory =
+        category === "all" || course.category === category;
+      const matchesLevel = level === "all" || course.level === level;
+
+      return matchesQuery && matchesCategory && matchesLevel;
+    });
+  }, [courses, query, category, level]);
 
   return (
     <div className="stack-md">
@@ -80,7 +92,7 @@ export default function CoursesCatalogClient({
         </div>
       </div>
       <div className="grid-cards">
-        {courses.map((course) => (
+        {filtered.map((course) => (
           <Link
             key={course.id}
             href={`/courses/${course.slug}`}
