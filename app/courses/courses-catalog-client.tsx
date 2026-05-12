@@ -36,6 +36,14 @@ export default function CoursesCatalogClient({
     });
   }, [courses, query, category, level]);
 
+  const resetFilters = () => {
+    setQuery("");
+    setCategory("all");
+    setLevel("all");
+  };
+
+  const isFiltering = query !== "" || category !== "all" || level !== "all";
+
   return (
     <div className="stack-md">
       <div className="panel">
@@ -89,6 +97,14 @@ export default function CoursesCatalogClient({
               ))}
             </select>
           </div>
+        </div>
+
+        <div className="filter-bar">
+          {isFiltering ? (
+            <button className="btn-link" onClick={resetFilters}>
+              Reset filters
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="grid-cards">
