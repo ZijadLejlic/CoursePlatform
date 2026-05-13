@@ -35,6 +35,9 @@ export function Header() {
           <Link href="/instructors" className="site-nav-link">
             Instructors
           </Link>
+          <Link href="/register" className="site-nav-link">
+            Register
+          </Link>
         </nav>
       </div>
     </header>
