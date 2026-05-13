@@ -1,4 +1,5 @@
-import CoursesCatalogClient from "./courses-catalog-client";
+import CoursesCatalogClient from "@/components/CoursesCatalogClient";
+import { SectionTitle } from "@/components/SectionTitle";
 import {
   getAllCourses,
   getCourseCategories,
@@ -15,20 +16,17 @@ export default function Courses() {
     <section className="pad-section">
       <div className="container">
         <div className="stack">
-          <div className="section-head">
-            <span className="eyebrow">Catalog</span>
-            <h2 className="title-page">All Courses</h2>
-            <p className="text-muted max-prose">
-              Browse every course in the catalog. Use the filters to narrow down
-              by litle, category od level.
-            </p>
-          </div>
+          <SectionTitle
+            eyebrow="Catalog"
+            title="All courses"
+            description="Browse every course in the catalog. Use the filters to narrow down by title, category or level"
+          />
 
           <CoursesCatalogClient
             courses={courses}
             categories={categories}
             levels={levels}
-          ></CoursesCatalogClient>
+          />
         </div>
       </div>
     </section>

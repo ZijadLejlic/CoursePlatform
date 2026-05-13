@@ -27,11 +27,15 @@ export default async function SearchPage({
 
   const data = await fetchCoursesFromApi(trimmed);
 
+  if (!data) {
+    return <p>Failed to load courses</p>;
+  }
+
   const { count, courses } = data;
 
   return (
     <section className="pad-section">
-      <h3>Found {count} course</h3>;
+      <h3>Found {count} course</h3>
       {courses.map((c) => (
         <h2 key={c.id}>{c.title}</h2>
       ))}

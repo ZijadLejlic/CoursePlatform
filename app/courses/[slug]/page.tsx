@@ -1,5 +1,6 @@
 import { getCourseBySlug, getInstructorBySlug } from "@/lib/data";
 import { notFound } from "next/navigation";
+import { Badge } from "@/components/Badge";
 import Link from "next/link";
 
 export default async function CourseDetailPage({
@@ -22,9 +23,9 @@ export default async function CourseDetailPage({
         <div className="course-layout">
           <div>
             <div className="badge-row">
-              <span className="badge badge--brand">{course.category}</span>
-              <span className="badge">{course.level}</span>
-              <span className="badge badge--success">{course.duration}</span>
+              <Badge variant="brand">{course.category}</Badge>
+              <Badge>{course.level}</Badge>
+              <Badge variant="success">{course.duration}</Badge>
             </div>
 
             <h1 className="title-display">{course.title}</h1>
@@ -36,7 +37,7 @@ export default async function CourseDetailPage({
               <p>{course.description}</p>
             </div>
             <div className="lesson-block">
-              <h2 className="title-section">What you'll learn</h2>
+              <h2 className="title-section">What you will learn</h2>
               <ol>
                 {course.lessons.map((lesson, idx) => (
                   <li key={lesson} className="lesson-item">
