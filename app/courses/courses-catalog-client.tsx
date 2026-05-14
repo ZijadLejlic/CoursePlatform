@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { instructors, type Course } from "@/lib/data";
 import { useMemo, useState } from "react";
+import type { CatalogCourse } from "@/lib/types";
 
-function instructorNameForCourse(course: Course): string {
+function instructorNameForCourse(course: CatalogCourse): string {
   return (
     instructors.find((i) => i.slug === course.instructorSlug)?.name ??
     "Unknown instructor"
@@ -16,7 +16,7 @@ export default function CoursesCatalogClient({
   categories,
   levels,
 }: {
-  courses: Course[];
+  courses: CatalogCourse[];
   categories: string[];
   levels: string[];
 }) {

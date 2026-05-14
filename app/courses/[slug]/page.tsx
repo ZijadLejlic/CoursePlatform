@@ -1,7 +1,9 @@
-import { getCourseBySlug, getInstructorBySlug } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/Badge";
+import { createServerSupabaseClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { Badge } from "@/components/Badge";
+import { getCourseBySlug } from "@/lib/catalog";
+import { enrollCourseAction } from "@/actions/enroll";
 
 export default async function CourseDetailPage({
   params,
@@ -10,16 +12,51 @@ export default async function CourseDetailPage({
 }) {
   const { slug } = await params;
 
-  const course = getCourseBySlug(slug);
+  const course = await getCourseBySlug(slug);
   if (!course) notFound();
 
-  const instructor = getInstructorBySlug(course.instructorSlug);
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let student = null;
+  let enrolled = false;
+
+  if (user) {
+    const { data: studentData } = await supabase
+      .from("students")
+      .select("id")
+      .eq("user_uuid", user.id)
+      .single();
+
+    student = studentData;
+
+    if (student) {
+      const { data: enrollmentRow } = await supabase
+        .from("enrollments")
+        .select("id")
+        .eq("student_id", student.id)
+        .eq("course_id", course.id)
+        .maybeSingle();
+
+      enrolled = !!enrollmentRow;
+
+      if (enrollmentRow) {
+        enrolled = true;
+      }
+    }
+  }
+
+  const instructor = null;
+
   return (
     <section className="pad-section">
       <div className="container">
         <nav className="back-nav">
           <Link href="/courses">Back to Courses</Link>
         </nav>
+
         <div className="course-layout">
           <div>
             <div className="badge-row">
@@ -36,42 +73,45 @@ export default async function CourseDetailPage({
               <h2>About this course</h2>
               <p>{course.description}</p>
             </div>
-            <div className="lesson-block">
-              <h2 className="title-section">What you will learn</h2>
-              <ol>
-                {course.lessons.map((lesson, idx) => (
-                  <li key={lesson} className="lesson-item">
-                    <span className="lesson-num">{idx + 1}</span>
-                    <span className="lesson-text">{lesson}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
           </div>
+
           <aside className="course-aside">
             <div className="sidebar-card">
               <p className="sidebar-label">At a glance</p>
+
               <dl className="meta-grid">
                 <div>
                   <dt>Level</dt>
                   <dd>{course.level}</dd>
                 </div>
+
                 <div>
                   <dt>Category</dt>
                   <dd>{course.category}</dd>
                 </div>
+
                 <div>
                   <dt>Duration</dt>
                   <dd>{course.duration}</dd>
                 </div>
-                <div>
-                  <dt>Lesson</dt>
-                  <dd>{course.lessonsCount}</dd>
-                </div>
               </dl>
             </div>
 
-            {instructor ? (
+            {user ? (
+              <>
+                {enrolled ? (
+                  <p>Already Enrolled</p>
+                ) : (
+                  <form action={enrollCourseAction}>
+                    <input type="hidden" value={course.id} name="course_id" />
+                    <input type="hidden" value={student.id} name="student_id" />
+                    <button type="submit">Enroll</button>
+                  </form>
+                )}
+              </>
+            ) : null}
+
+            {instructor && (
               <div className="sidebar-card">
                 <p className="sidebar-label">Instructor</p>
                 <p className="sidebar-instructor-name">{instructor.name}</p>
@@ -86,7 +126,7 @@ export default async function CourseDetailPage({
                   View Profile
                 </Link>
               </div>
-            ) : null}
+            )}
           </aside>
         </div>
       </div>

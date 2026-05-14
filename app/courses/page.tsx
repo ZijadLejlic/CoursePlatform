@@ -1,16 +1,15 @@
 import CoursesCatalogClient from "@/components/CoursesCatalogClient";
 import { SectionTitle } from "@/components/SectionTitle";
 import {
-  getAllCourses,
-  getCourseCategories,
-  getCourseLevels,
-} from "@/lib/data";
+  getCourseCategoriesAndLevels,
+  getPublishedCourses,
+} from "@/lib/catalog";
 
-export default function Courses() {
-  const courses = getAllCourses();
-
-  const categories = getCourseCategories();
-  const levels = getCourseLevels();
+export default async function Courses() {
+  const [courses, { categories, levels }] = await Promise.all([
+    getPublishedCourses(),
+    getCourseCategoriesAndLevels(),
+  ]);
 
   return (
     <section className="pad-section">
